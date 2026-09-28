@@ -22,8 +22,14 @@ export class GitHubError extends Error {
 
 async function request(path) {
   let res;
+  const headers = { Accept: 'application/vnd.github+json' };
+  const token = import.meta.env?.VITE_GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   try {
-    res = await fetch(API + path, { headers: { Accept: 'application/vnd.github+json' } });
+    res = await fetch(API + path, { headers });
   } catch {
     throw new GitHubError('network', 'GitHub could not be reached.');
   }
