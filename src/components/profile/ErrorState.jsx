@@ -6,14 +6,16 @@ import Clock from '@/components/shared/Clock';
 import SearchForm from '@/components/shared/SearchForm';
 import { describeError } from '@/lib/errors';
 
-export default function ErrorState({ error, username, onRetry = undefined, showClock = true }) {
+export default function ErrorState({ error, username, onRetry = undefined, showHeader = true }) {
   const copy = describeError(error, username);
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-5 md:px-10">
-        <Logo />
-        {showClock && <Clock />}
-      </header>
+      {showHeader && (
+        <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-ink/10 bg-paper px-5 py-5 md:px-10">
+          <Logo />
+          <Clock />
+        </header>
+      )}
       <main role="alert" className="flex min-h-[100svh] flex-col justify-center px-5 pb-16 pt-28 md:px-10">
         <motion.div initial={{ scale: 2.4, opacity: 0, rotate: -20 }} animate={{ scale: 1, opacity: 1, rotate: -5 }} transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.3 }} className="self-start border-[3px] border-signal px-4 py-2 font-mono text-sm uppercase tracking-[0.3em] text-signal md:text-base">
           {copy.stamp}

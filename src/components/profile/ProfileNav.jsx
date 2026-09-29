@@ -12,7 +12,7 @@ export default function ProfileNav({ user }) {
   useMotionValueEvent(scrollY, 'change', (v) => setCompact(v > 560));
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${compact ? 'border-b border-ink/10 bg-paper/95' : ''}`}>
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-ink/10 bg-paper transition-colors duration-300">
       <div className="flex h-16 items-center justify-between gap-4 px-5 md:px-10">
         <Logo />
         <AnimatePresence>

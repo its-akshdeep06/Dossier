@@ -8,7 +8,7 @@ import RevealText from '@/components/shared/RevealText';
 export default function NotFound() {
   return (
     <PageTransition>
-      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-5 md:px-10">
+      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-ink/10 bg-paper px-5 py-5 md:px-10">
         <Logo />
         <Clock />
       </header>

@@ -35,7 +35,7 @@ export default function AnalyzingScreen({ username, user, repos, reposError, pro
   return (
     <motion.div role="status" aria-live="polite" className="fixed inset-0 z-50 flex flex-col justify-between bg-ink px-5 py-6 text-paper md:px-10 md:py-8" exit={{ y: '-100%', transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] } }}>
       <div className="flex justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-paper/50">
-        <span>Dossier</span>
+        <span className="bg-paper px-2 py-1 text-black">Dossier</span>
         <div className="flex items-center gap-3">
           <Clock />
           <span>Opening file</span>
