@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
+import Clock from '@/components/shared/Clock';
 import { avatar } from '@/lib/format';
 
 export default function ProfileNav({ user }) {
@@ -30,10 +31,13 @@ export default function ProfileNav({ user }) {
             </motion.button>
           )}
         </AnimatePresence>
-        <Link to="/" className="group inline-flex shrink-0 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]">
-          <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
-          <span className="hidden sm:inline">New search</span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-4">
+          <Clock />
+          <Link to="/" className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]">
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-1" />
+            <span className="hidden sm:inline">New search</span>
+          </Link>
+        </div>
       </div>
     </header>
   );

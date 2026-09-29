@@ -5,6 +5,8 @@ import Grain from '@/components/shared/Grain';
 import Landing from '@/pages/Landing';
 import Profile from '@/pages/Profile';
 import NotFound from '@/pages/NotFound';
+import DuelSetup from '@/pages/DuelSetup';
+import Duel from '@/pages/Duel';
 import ScrollToTop from './components/ScrollToTop';
 
 function AppRoutes() {
@@ -16,6 +18,9 @@ function AppRoutes() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Landing />} />
           <Route path="/profile/:username" element={<Profile />} />
+          <Route path="/duel" element={<DuelSetup />} />
+          <Route path="/duel/:usernameA" element={<DuelSetup />} />
+          <Route path="/duel/:usernameA/:usernameB" element={<Duel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>

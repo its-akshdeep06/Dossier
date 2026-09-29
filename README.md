@@ -38,6 +38,21 @@ The repository section supports practical browsing without extra requests:
 
 Language byte counts are fetched only when a repository is opened. Dossier turns GitHub's `{ language: bytes }` response into a proportional bar and percentage breakdown, so it avoids fetching this detail for repositories the visitor never inspects.
 
+### Dossier Duel
+
+Compare two public GitHub profiles in a head-to-head report. Start from the landing page, or use the Duel link on a profile to prefill that account as the first player. The comparison scores six dimensions from public profile and repository data:
+
+- Community: follower count.
+- Repository impact: total stars across public repositories.
+- Open-source reach: total forks across public repositories.
+- Portfolio breadth: repository count combined with primary-language diversity.
+- Original work: the share of repositories that are not forks.
+- Repository recency: the share of repositories updated within the last six months.
+
+Each category awards a point to the higher value. If category points are tied, Dossier checks total stars, total forks, original-work ratio, repository recency, and language diversity in that order; if all remain equal, the result is a tie. These are Dossier's comparison heuristics, not an overall measure of developer skill. Results include category-by-category values and a winner summary. Comparing the same account against itself produces a mirror match.
+
+The landing-page call to action and navigation both link to Duel. A live clock appears in the navigation, and fine-pointer devices get an animated Octocat cursor with click ripples.
+
 ### Friendly failure states
 
 The app validates usernames before making a request and gives specific guidance for invalid usernames, missing profiles, network failures, GitHub API errors, and unauthenticated rate limits. Retry controls are available for recoverable failures.
@@ -60,7 +75,10 @@ GitHub's unauthenticated API quota is typically 60 requests per hour per network
 | --- | --- |
 | `/` | Landing page and username search |
 | `/profile/:username` | Profile report for a GitHub username |
-| Any other path | Not-found page |
+| `/duel` | Enter two GitHub usernames to compare |
+| `/duel/:usernameA` | Duel setup with the first username prefilled |
+| `/duel/:usernameA/:usernameB` | Head-to-head comparison results |
+| Any unmatched path | Not-found page |
 
 ## Technology
 
@@ -68,6 +86,7 @@ GitHub's unauthenticated API quota is typically 60 requests per hour per network
 - React Router for client-side routes
 - Framer Motion for motion with reduced-motion support
 - Tailwind CSS for styling
+- `canvas-confetti` for the reduced-motion-aware Duel winner celebration
 - GitHub REST API for public data
 
 The project intentionally keeps its runtime dependency set small and connects only to GitHub's public API for application data.
@@ -78,11 +97,12 @@ The project intentionally keeps its runtime dependency set small and connects on
 src/
   api/github.js          GitHub requests, memory cache, and API error handling
   hooks/                 Profile and per-repository language data hooks
-  lib/                   Validation, formatting, analysis, colors, and error copy
+  lib/                   Validation, formatting, profile analysis, Duel scoring, colors, and error copy
   components/landing/    Landing-page sections and illustrative visuals
   components/profile/    Profile report, findings, repository explorer, and detail view
   components/shared/     Reusable navigation, search, motion, and visual components
-  pages/                 Route-level page components
+  pages/                 Landing, profile, Duel setup/results, and not-found routes
+public/                  Static assets, including the Octocat cursor image
 ```
 
 ## Development

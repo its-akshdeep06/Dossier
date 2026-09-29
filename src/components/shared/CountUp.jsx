@@ -20,5 +20,5 @@ export default function CountUp({ value, format = defaultFormat, className = '' 
     return () => controls.stop();
   }, [inView, value, reduce, format]);
 
-  return <span ref={ref} className={className} title={value.toLocaleString('en')}>{format(0)}</span>;
+  return <span ref={ref} className={className} title={value != null ? value.toLocaleString('en') : ''}>{format(0)}</span>;
 }

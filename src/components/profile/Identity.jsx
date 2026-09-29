@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { MapPin, Building2, Link2, CalendarDays, AtSign, ArrowUpRight } from 'lucide-react';
+import { MapPin, Building2, Link2, CalendarDays, AtSign, ArrowUpRight, Swords } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import RevealText from '@/components/shared/RevealText';
 import { date, href, stripProtocol } from '@/lib/format';
 
@@ -26,9 +27,21 @@ export default function Identity({ user }) {
         <RevealText text={user.name || user.login} delay={0.2} />
       </h1>
       {user.name && (
-        <motion.a href={user.html_url} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="mt-3 inline-block font-mono text-sm text-signal hover:underline">
-          @{user.login}
-        </motion.a>
+        <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="mt-3 flex items-center gap-4">
+          <a href={user.html_url} target="_blank" rel="noreferrer" className="font-mono text-sm text-signal hover:underline">
+            @{user.login}
+          </a>
+          <Link to={`/duel/${user.login}`} className="flex items-center gap-1.5 rounded-full border border-ink/20 px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors hover:border-signal hover:bg-signal hover:text-paper">
+            <Swords className="h-3 w-3" /> Duel
+          </Link>
+        </motion.div>
+      )}
+      {!user.name && (
+        <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="mt-3">
+          <Link to={`/duel/${user.login}`} className="flex w-fit items-center gap-1.5 rounded-full border border-ink/20 px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors hover:border-signal hover:bg-signal hover:text-paper">
+            <Swords className="h-3 w-3" /> Duel
+          </Link>
+        </motion.div>
       )}
       {user.bio && (
         <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.7, ease }} className="mt-6 max-w-xl text-lg leading-relaxed text-ink/75 md:text-xl">
