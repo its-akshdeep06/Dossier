@@ -171,7 +171,7 @@ function DuelBoard({ comparison }) {
   const [revealStep, setRevealStep] = useState(0);
   const sequenceComplete = revealStep >= categories.length;
   const currentCategory = categories[Math.min(revealStep, categories.length - 1)];
-  const revealedCategories = categories.slice(0, Math.min(revealStep + 1, categories.length));
+  const revealedCategories = categories.slice(0, revealStep);
   const revealedScoreA = revealedCategories.filter((category) => category.winner === 'a').length;
   const revealedScoreB = revealedCategories.filter((category) => category.winner === 'b').length;
 
@@ -192,7 +192,7 @@ function DuelBoard({ comparison }) {
     <div className="space-y-16">
       {/* Head to head */}
       <header className="flex flex-col md:flex-row items-center justify-between gap-10">
-        <PlayerCard user={pA} score={revealedScoreA} scoreKey={revealStep} isWinner={sequenceComplete && result === 'a'} isLoser={sequenceComplete && result === 'b'} />
+        <PlayerCard user={pA} score={revealedScoreA} activeMetric={sequenceComplete ? null : currentCategory.metric} isWinner={sequenceComplete && result === 'a'} isLoser={sequenceComplete && result === 'b'} />
         <motion.div
           initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -201,7 +201,7 @@ function DuelBoard({ comparison }) {
         >
           VS
         </motion.div>
-        <PlayerCard user={pB} score={revealedScoreB} scoreKey={revealStep} isWinner={sequenceComplete && result === 'b'} isLoser={sequenceComplete && result === 'a'} alignRight />
+        <PlayerCard user={pB} score={revealedScoreB} activeMetric={sequenceComplete ? null : currentCategory.metric} isWinner={sequenceComplete && result === 'b'} isLoser={sequenceComplete && result === 'a'} alignRight />
       </header>
 
       <AnimatePresence mode="wait">
@@ -289,7 +289,7 @@ function DuelBoard({ comparison }) {
 }
 
 /* ─── Player card with winner/loser PFP logic ─── */
-function PlayerCard({ user, score, isWinner, isLoser, alignRight }) {
+function PlayerCard({ user, score, activeMetric, isWinner, isLoser, alignRight }) {
   return (
     <motion.div
       initial={{ opacity: 0, x: alignRight ? 60 : -60 }}
@@ -349,8 +349,18 @@ function PlayerCard({ user, score, isWinner, isLoser, alignRight }) {
           transition={{ delay: 0.6, type: 'spring', stiffness: 300 }}
           className={`font-display text-6xl md:text-7xl leading-none ${isWinner ? 'text-signal' : isLoser ? 'text-ink/40' : 'text-ink'}`}
         >
-          <CountUp value={score} />
+          <motion.span
+            key={score}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {score}
+          </motion.span>
         </motion.div>
+        <p className="mt-2 max-w-[200px] break-words font-mono text-[10px] uppercase text-ink/50 md:max-w-xs">
+          {activeMetric ? `Considering: ${activeMetric}` : 'Final score'}
+        </p>
       </div>
     </motion.div>
   );
