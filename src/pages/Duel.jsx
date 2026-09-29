@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useGithubProfile } from '@/hooks/useGithubProfile';
@@ -6,7 +6,6 @@ import { compareProfiles } from '@/lib/duel';
 import PageTransition from '@/components/shared/PageTransition';
 import LandingNav from '@/components/landing/LandingNav';
 import ErrorState from '@/components/profile/ErrorState';
-import CountUp from '@/components/shared/CountUp';
 import confetti from 'canvas-confetti';
 
 const ease = [0.16, 1, 0.3, 1];
@@ -146,11 +145,11 @@ function TrophyBadge() {
 }
 
 /* ─── Confetti burst helper ─── */
-function useConfettiBurst(result, reduced) {
+function useConfettiBurst(result, reduced, enabled) {
   const firedRef = useRef(false);
 
   useEffect(() => {
-    if (firedRef.current || reduced || result === 'tie') return;
+    if (firedRef.current || !enabled || reduced || result === 'tie') return;
     firedRef.current = true;
 
     const side = result === 'a' ? 0.15 : 0.85;
@@ -161,7 +160,7 @@ function useConfettiBurst(result, reduced) {
     fire({ spread: 55, particleCount: 60, startVelocity: 30 });
     setTimeout(() => fire({ spread: 70, particleCount: 40, startVelocity: 45 }), 200);
     setTimeout(() => fire({ spread: 90, particleCount: 30, decay: 0.92 }), 400);
-  }, [result, reduced]);
+  }, [result, reduced, enabled]);
 }
 
 /* ─── Main duel board ─── */
@@ -169,14 +168,31 @@ function DuelBoard({ comparison }) {
   const { profiles, categories, score, result, tieBreaker } = comparison;
   const { a: pA, b: pB } = profiles;
   const reduced = useReducedMotion();
+  const [revealStep, setRevealStep] = useState(0);
+  const sequenceComplete = revealStep >= categories.length;
+  const currentCategory = categories[Math.min(revealStep, categories.length - 1)];
+  const revealedCategories = categories.slice(0, Math.min(revealStep + 1, categories.length));
+  const revealedScoreA = revealedCategories.filter((category) => category.winner === 'a').length;
+  const revealedScoreB = revealedCategories.filter((category) => category.winner === 'b').length;
 
-  useConfettiBurst(result, reduced);
+  useEffect(() => {
+    if (reduced) {
+      setRevealStep(categories.length);
+      return;
+    }
+    if (sequenceComplete) return;
+
+    const timer = setTimeout(() => setRevealStep((step) => step + 1), 850);
+    return () => clearTimeout(timer);
+  }, [categories.length, reduced, revealStep, sequenceComplete]);
+
+  useConfettiBurst(result, reduced, sequenceComplete);
 
   return (
     <div className="space-y-16">
       {/* Head to head */}
       <header className="flex flex-col md:flex-row items-center justify-between gap-10">
-        <PlayerCard user={pA} score={score.a} isWinner={result === 'a'} isLoser={result === 'b'} />
+        <PlayerCard user={pA} score={revealedScoreA} scoreKey={revealStep} isWinner={sequenceComplete && result === 'a'} isLoser={sequenceComplete && result === 'b'} />
         <motion.div
           initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -185,65 +201,89 @@ function DuelBoard({ comparison }) {
         >
           VS
         </motion.div>
-        <PlayerCard user={pB} score={score.b} isWinner={result === 'b'} isLoser={result === 'a'} alignRight />
+        <PlayerCard user={pB} score={revealedScoreB} scoreKey={revealStep} isWinner={sequenceComplete && result === 'b'} isLoser={sequenceComplete && result === 'a'} alignRight />
       </header>
 
-      {/* Final Result Summary */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8, ease }}
-        whileHover={{ scale: 1.02 }}
-        className="text-center py-10 border-y-2 border-ink transition-colors duration-300 hover:border-signal"
-      >
-        <h2 className="font-display text-5xl md:text-6xl mb-4">
-          {result === 'a' && `${pA.login} wins the Duel`}
-          {result === 'b' && `${pB.login} wins the Duel`}
-          {result === 'tie' && `Absolute Tie`}
-        </h2>
-        {tieBreaker && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.4 }}
-            className="text-signal font-mono text-sm uppercase"
+      <AnimatePresence mode="wait">
+        {!sequenceComplete ? (
+          <motion.section
+            key={currentCategory.id}
+            aria-live="polite"
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -18, scale: 0.98 }}
+            transition={{ duration: 0.45, ease }}
+            className="mx-auto max-w-3xl border-y-2 border-ink py-8 text-center"
           >
-            Tie broken by: {tieBreaker.metric}
-          </motion.p>
-        )}
-        {result !== 'tie' && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
-            className="text-ink/50 font-mono text-xs mt-3 uppercase tracking-wider"
-          >
-            {score.a} categories won by {pA.login} · {score.b} categories won by {pB.login} · {6 - score.a - score.b} tied
-          </motion.p>
-        )}
-      </motion.div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-signal">
+              Score reveal {Math.min(revealStep + 1, categories.length)} / {categories.length}
+            </p>
+            <h2 className="mt-3 font-display text-4xl md:text-6xl">{currentCategory.label}</h2>
+            <p className="mt-2 font-mono text-xs text-ink/55">{currentCategory.metric}</p>
+            <div className="mt-8 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 sm:gap-6">
+              <div className="min-w-0">
+                <p className="break-all font-mono text-xs text-ink/60">{pA.login}</p>
+                <p className={`mt-1 font-display text-3xl sm:text-4xl ${currentCategory.winner === 'a' ? 'text-signal' : ''}`}>
+                  {formatValue(currentCategory.aValue, currentCategory.isPercentage)}
+                </p>
+              </div>
+              <span className="font-display text-2xl italic text-signal">VS</span>
+              <div className="min-w-0">
+                <p className="break-all font-mono text-xs text-ink/60">{pB.login}</p>
+                <p className={`mt-1 font-display text-3xl sm:text-4xl ${currentCategory.winner === 'b' ? 'text-signal' : ''}`}>
+                  {formatValue(currentCategory.bValue, currentCategory.isPercentage)}
+                </p>
+              </div>
+            </div>
+            <p className="mt-5 font-mono text-xs uppercase tracking-wider text-ink/60">
+              {currentCategory.winner === 'tie' ? 'Round tied' : `Point to ${currentCategory.winner === 'a' ? pA.login : pB.login}`}
+            </p>
+            <div className="mt-6 flex justify-center gap-2" aria-hidden>
+              {categories.map((category, index) => (
+                <span key={category.id} className={`h-1.5 w-6 rounded-full ${index <= revealStep ? 'bg-signal' : 'bg-ink/15'}`} />
+              ))}
+            </div>
+          </motion.section>
+        ) : (
+          <motion.div key="final-breakdown" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, ease }}
+              whileHover={{ scale: 1.02 }}
+              className="text-center py-10 border-y-2 border-ink transition-colors duration-300 hover:border-signal"
+            >
+              <h2 className="font-display text-5xl md:text-6xl mb-4">
+                {result === 'a' && `${pA.login} wins the Duel`}
+                {result === 'b' && `${pB.login} wins the Duel`}
+                {result === 'tie' && 'Absolute Tie'}
+              </h2>
+              {tieBreaker && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-signal font-mono text-sm uppercase">
+                  Tie broken by: {tieBreaker.metric}
+                </motion.p>
+              )}
+              {result !== 'tie' && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-ink/50 font-mono text-xs mt-3 uppercase tracking-wider">
+                  {score.a} categories won by {pA.login} · {score.b} categories won by {pB.login} · {categories.length - score.a - score.b} tied
+                </motion.p>
+              )}
+            </motion.div>
 
-      {/* Categories */}
-      <div className="space-y-4">
-        {categories.map((c, i) => (
-          <CategoryRow key={c.id} category={c} pA={pA} pB={pB} index={i} />
-        ))}
-      </div>
+            <div className="space-y-4">
+              {categories.map((c, i) => (
+                <CategoryRow key={c.id} category={c} pA={pA} pB={pB} index={i} />
+              ))}
+            </div>
 
-      {/* Rematch */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.2 }}
-        className="text-center pt-8"
-      >
-        <Link
-          to="/duel"
-          className="inline-block rounded-full border-2 border-ink px-8 py-3 font-display text-lg uppercase tracking-wider transition-all duration-300 hover:bg-ink hover:text-paper hover:scale-105"
-        >
-          New Duel
-        </Link>
-      </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center pt-4">
+              <Link to="/duel" className="inline-block rounded-full border-2 border-ink px-8 py-3 font-display text-lg uppercase tracking-wider transition-all duration-300 hover:bg-ink hover:text-paper hover:scale-105">
+                New Duel
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
