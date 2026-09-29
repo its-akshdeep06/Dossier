@@ -4,8 +4,8 @@ const ease = [0.16, 1, 0.3, 1];
 
 export function IdentityV() {
   return (
-    <div className="flex items-center gap-6 md:gap-10">
-      <div className="relative h-28 w-28 shrink-0 sm:h-40 sm:w-40 md:h-56 md:w-56">
+    <div className="flex items-center gap-2 sm:gap-6 md:gap-10">
+      <div className="relative h-20 w-20 shrink-0 sm:h-40 sm:w-40 md:h-56 md:w-56">
         <motion.div className="absolute inset-0 rounded-full border border-dashed border-ink/40" animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: 'linear' }} />
         <div className="absolute inset-[10%] flex overflow-hidden rounded-full">
           {Array.from({ length: 7 }, (_, i) => (
@@ -17,7 +17,7 @@ export function IdentityV() {
       <div className="space-y-3">
         {['name', '@username', 'bio', 'location', 'joined'].map((t, i) => (
           <motion.div key={t} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + i * 0.08, ease }} className="flex items-center gap-3">
-            <span className="w-16 font-mono text-[10px] uppercase tracking-widest text-dust md:w-24">{t}</span>
+            <span className="w-12 font-mono text-[10px] uppercase tracking-widest text-dust md:w-24">{t}</span>
             <span className="h-2 rounded-full bg-ink/80" style={{ width: 30 + ((i * 37) % 70) }} />
           </motion.div>
         ))}
