@@ -2,14 +2,18 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import PageTransition from '@/components/shared/PageTransition';
 import Logo from '@/components/shared/Logo';
+import Clock from '@/components/shared/Clock';
 import RevealText from '@/components/shared/RevealText';
 
 export default function NotFound() {
   return (
     <PageTransition>
-      <header className="fixed left-5 top-5 z-40 md:left-10"><Logo /></header>
+      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-5 md:px-10">
+        <Logo />
+        <Clock />
+      </header>
       <main className="flex min-h-[100svh] flex-col justify-center px-5 md:px-10">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">Error 404 — page not on file</p>
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">Error 404 - page not on file</p>
         <h1 className="mt-4 font-display text-[26vw] leading-[0.85] md:text-[16vw]">
           <RevealText text="Misfiled." />
         </h1>

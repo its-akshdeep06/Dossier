@@ -17,7 +17,7 @@ export default function Clock() {
 
   return (
     <div
-      className="shrink-0 font-mono text-[11px] tracking-[0.18em] text-white mix-blend-difference"
+      className="shrink-0 bg-paper px-1.5 py-1 font-mono text-[11px] tracking-[0.18em] text-black"
       aria-live="off"
       aria-label={`Current time: ${time}`}
     >

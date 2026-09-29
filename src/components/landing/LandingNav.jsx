@@ -5,11 +5,11 @@ import Clock from '@/components/shared/Clock';
 
 export default function LandingNav() {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-5 text-white mix-blend-difference md:px-10">
-      <Logo />
+    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-5 text-white md:px-10">
+      <div className="mix-blend-difference"><Logo /></div>
       <div className="flex items-center gap-4">
         <Clock />
-        <Link to="/duel" className="flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:border-white hover:bg-white hover:text-black">
+        <Link to="/duel" className="flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors hover:border-white hover:bg-white hover:text-black mix-blend-difference">
           <Swords className="h-3 w-3" /> Duel
         </Link>
       </div>

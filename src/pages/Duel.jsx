@@ -45,7 +45,7 @@ export default function Duel() {
     return (
       <PageTransition>
         <LandingNav />
-        <ErrorState error={error} username={profileA.userError ? usernameA : usernameB} />
+        <ErrorState error={error} username={profileA.userError ? usernameA : usernameB} showClock={false} />
       </PageTransition>
     );
   }

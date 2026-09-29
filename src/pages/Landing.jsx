@@ -8,7 +8,7 @@ import Principles from '@/components/landing/Principles';
 import FinalCta from '@/components/landing/FinalCta';
 
 export default function Landing() {
-  useEffect(() => { document.title = 'Dossier — read any GitHub profile'; }, []);
+  useEffect(() => { document.title = 'Dossier - analyze any GitHub profile'; }, []);
   return (
     <PageTransition>
       <LandingNav />

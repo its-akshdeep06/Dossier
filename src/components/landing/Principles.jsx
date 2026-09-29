@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-const TEXT = "No account. No login. No database. Dossier asks GitHub's public API only for what it needs — and forgets everything the moment you leave.";
+const TEXT = "No account. No login. No database. Dossier asks GitHub's Public API only for what it needs, then forgets everything the moment you leave!";
 const FACTS = [
   ['1', 'request for the profile'],
   ['⌈n ÷ 100⌉', 'requests to collect every repository'],

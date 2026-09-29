@@ -20,9 +20,9 @@ export default function Hero() {
         <em className="text-signal"><RevealText text="paper trail." delay={0.3} /></em>
       </motion.h1>
 
-      <div className="grid items-end gap-8 md:grid-cols-12">
+      <div className="grid items-end gap-8 md:grid-cols-12 translate-y-[-55px]">
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.8, ease }} className="max-w-sm text-base leading-relaxed text-ink/70 md:col-span-4">
-          Dossier opens the public GitHub file of anyone — identity, every repository, stars, forks and languages — read live from the GitHub API. No account. No login.
+          Dossier opens the public GitHub file of anyone, every repository, stars, forks and languages. Reads live from the GitHub API. No account. No login.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.9, ease }} className="md:col-span-7 md:col-start-6">
           <SearchForm id="hero-search" />

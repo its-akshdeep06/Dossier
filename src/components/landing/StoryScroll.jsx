@@ -4,11 +4,11 @@ import StoryVisual from '@/components/landing/StoryVisual';
 
 const ease = [0.16, 1, 0.3, 1];
 const CHAPTERS = [
-  { n: '01', kicker: 'Identity', title: 'It starts with the person.', body: 'Their GitHub profile picture, name, bio, location, company, website and the day they joined — only what GitHub actually has on file. Followers and following included.' },
-  { n: '02', kicker: 'Highlights', title: 'Then the numbers speak.', body: 'Stars earned, forks, repository count — plus facts derived from real data: the most-starred project, the latest activity, the language they reach for most.' },
-  { n: '03', kicker: 'Explorer', title: 'Every repository. Not ten.', body: 'All public repositories are collected page by page. Search by name, filter by the languages this developer actually uses, sort by stars or recency — instantly, with no extra requests.' },
-  { n: '04', kicker: 'Inspection', title: 'Open any repository.', body: 'Show Details expands a single repository — topics, license, issues, size, branch — and fetches its extra data only at the moment you ask.' },
-  { n: '05', kicker: 'Languages', title: 'Bytes become proportions.', body: 'GitHub reports how many bytes of each language a repository contains. Dossier converts those counts into exact percentages — calculated, never guessed.' },
+  { n: '01', kicker: 'Identity', title: 'It starts with the person.', body: 'Their GitHub profile picture, name, bio, location, company, website and the day they joined, only what GitHub actually has public. Followers and following included.' },
+  { n: '02', kicker: 'Highlights', title: 'Then the numbers speak.', body: 'Stars earned, forks, repository count, plus facts derived from real data: the most-starred project, the latest activity, the language they reach for most.' },
+  { n: '03', kicker: 'Explorer', title: 'Every repository. Not ten.', body: 'All public repositories are collected page by page. Search by name, filter by the languages this developer actually uses, sort by stars or recency, instantly with no extra requests.' },
+  { n: '04', kicker: 'Inspection', title: 'Open any repository.', body: 'Show Details, expands a single repository: topics, license, issues, size, branch and fetches its extra data only at the moment you ask.' },
+  { n: '05', kicker: 'Languages', title: 'Bytes become proportions.', body: 'GitHub reports how many bytes of each language a repository contains. Dossier converts those counts into exact calculated percentages, never guessed.' },
 ];
 
 export default function StoryScroll() {
